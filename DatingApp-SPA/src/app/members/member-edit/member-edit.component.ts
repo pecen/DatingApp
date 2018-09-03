@@ -14,6 +14,7 @@ import { UserService } from '../../_services/user.service';
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  photoUrl: string;
   // The @HostListener and unloadNotification that is brought in helps preventing
   // unsaved data to get lost if a user accidentally closes the tab/browser. A popup
   // shows up telling that there are unsaved data on the web page.
@@ -31,6 +32,8 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
+
+    this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
   }
 
   updateUser() {
@@ -40,6 +43,10 @@ export class MemberEditComponent implements OnInit {
     }, error => {
       this.alertify.error(error);
     });
+  }
+
+  updateMainPhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
   }
 
 }
