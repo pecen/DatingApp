@@ -87,9 +87,26 @@ namespace DatingApp.API
 
             // Uncomment the following row if you need to seed data to the db
             // seeder.SeedUsers();
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            // The following row was used when I couldn't Delete messages, i.e. up and until section 16.
+            // It was then replaced by the next row. Turned out the error wasn't there, but instead
+            // a code part was missing in the Delete method in the MessagesController. 
+            // app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
             app.UseAuthentication();
-            app.UseMvc();
+            // The next 2 lines were added after using ng build, to be able to run the app directly from
+            // the web server. 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseMvc(routes => {
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Fallback", action = "Index" }
+                );
+            });
         }
     }
 }
